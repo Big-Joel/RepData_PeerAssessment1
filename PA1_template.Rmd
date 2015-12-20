@@ -5,21 +5,43 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
-
-
-
+```{r}
+library(dplyr)
+activity <- read.csv("activity.csv")
+activity<-activity %>% mutate(date=as.Date(activity$date,format="%Y-%m-%d"))
+activityByDay<-activity %>%
+    na.omit() %>%
+    group_by(date) %>% 
+    summarise(totalSteps=sum(steps))
+```
 ## What is mean total number of steps taken per day?
-
-
-
+```{r}
+hist(activityByDay$totalSteps,main="Histogram: Steps by Day",xlab="Number of Steps")
+meanSteps<-mean(activityByDay$totalSteps)
+meanSteps
+medianSteps<-median(activityByDay$totalSteps)
+medianSteps
+```
 ## What is the average daily activity pattern?
+```{r}
+activityByInterval<-activity %>% 
+    na.omit() %>%
+    group_by(interval) %>%
+    summarise(meanSteps=mean(steps))
+plot(activityByInterval$interval,activityByInterval$meanSteps, type="l",
+     main="Daily Steps Pattern",
+     xlab="Interval",
+     ylab="Mean Steps")
+maxSteps<-activityByInterval %>% filter(meanSteps==max(activityByInterval$meanSteps))
+maxSteps$interval
 
+```
 
+## Inputing missing values
 
-## Imputing missing values
-
-
+Not completed.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Not completed.
